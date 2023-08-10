@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./**/*.{html,jsx}'],
+  content: ['./src/**/*.{html,jsx}'],
   theme: {
     screens: {
       sm: '480px',
@@ -8,7 +8,16 @@ export default {
       lg: '976px',
       xl: '1440px',
     },
-    extend: {},
+    extend: {
+      colors: {
+        'black': '#000000',
+        'dark-purple': '#5C2DD5',
+        'purple': '#7945FF',
+        'red': '#FD6687',
+        'white': '#FFFFFF',
+        'yellow': '#FFCE67',
+      }
+    },
   },
   plugins: [],
 }
