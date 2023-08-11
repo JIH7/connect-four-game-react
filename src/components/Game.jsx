@@ -29,7 +29,7 @@ function Game({setGameState}) {
                 <InGameButton text={"RESTART"}/>
             </div>
             <GameBoard/>
-            {paused ? <PauseMenu/> : <></>}
+            {paused ? <PauseMenu togglePaused={togglePaused} restartGame={restartGame} quitGame={quitGame}/> : <></>}
         </div>
   )
 }
