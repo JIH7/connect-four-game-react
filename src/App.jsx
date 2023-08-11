@@ -11,8 +11,8 @@ function App() {
   return (
     <div className='h-screen bg-purple | flex flex-col justify-center items-center'>
       {gameState === "mainMenu" ? <MainMenu setGameState={setGameState}/> : <></>}
-      {gameState === "gamePVP" ? <Game/> : <></>}
-      {gameState === "rules" ? <Rules/> : <></>}
+      {gameState === "gamePVP" ? <Game setGameState={setGameState}/> : <></>}
+      {gameState === "rules" ? <Rules setGameState={setGameState}/> : <></>}
     </div>
   );
 }
