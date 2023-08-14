@@ -14,3 +14,31 @@ img {
    -webkit-user-select: none;
    -ms-user-select: none;
 }
+
+.pointer-0 {
+    left: 5%;
+}
+
+.pointer-1 {
+    left: 19%;
+}
+
+.pointer-2 {
+    left: 33%;
+}
+
+.pointer-3 {
+    left: 47%;
+}
+
+.pointer-4 {
+    left: 61%;
+}
+
+.pointer-5 {
+    left: 75%;
+}
+
+.pointer-6 {
+    left: 89%;
+}
