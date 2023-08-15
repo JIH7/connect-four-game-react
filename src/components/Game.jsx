@@ -9,7 +9,7 @@ import InGameButton from './InGameButton'
 import PauseMenu from './PauseMenu';
 import ScoreWidget from './ScoreWidget'
 
-function Game({setGameState}) {
+function Game({setGameState, vsCPU = false}) {
     const [paused, setPaused] = useState(false);
     const [startingPlayer, setStartingPlayer] = useState('x')
     const [currentPlayer, setCurrentPlayer] = useState('x');
@@ -90,10 +90,10 @@ function Game({setGameState}) {
             </div>
             <div className='flex flex-col lg:flex-row lg:w-screen lg:justify-center items-center'>
                 <div className='flex justify-center w-full mb-[32px] lg:hidden'>
-                    <ScoreWidget score={p1Score} desktop={false} styles={'block lg:hidden'} side={'left'} player='player1'/>
-                    <ScoreWidget score={p2Score} desktop={false} styles={'block lg:hidden'} side={'right'} player='player2'/>
+                    <ScoreWidget score={p1Score} desktop={false} styles={'block lg:hidden'} side={'left'} player={vsCPU ? 'human' : 'player1'}/>
+                    <ScoreWidget score={p2Score} desktop={false} styles={'block lg:hidden'} side={'right'} player={vsCPU ? 'cpu' : 'player2'}/>
                 </div>
-                <ScoreWidget score={p1Score} player='player1' styles={'hidden lg:flex mx-[60px]'}/>
+                <ScoreWidget score={p1Score} player={vsCPU ? 'human' : 'player1'} styles={'hidden lg:flex mx-[60px]'}/>
                 <GameBoard
                     board={board}
                     setBoard={setBoard}
@@ -108,8 +108,9 @@ function Game({setGameState}) {
                     restartGame={restartGame}
                     timer={timer}
                     resetTimer={resetTimer}
-                    increaseScore={increaseScore}/>
-                    <ScoreWidget score={p2Score} player='player2' styles={'hidden lg:flex mx-[60px]'}/>
+                    increaseScore={increaseScore}
+                    vsCPU={vsCPU}/>
+                    <ScoreWidget score={p2Score} player={vsCPU ? 'cpu' : 'player2'} styles={'hidden lg:flex mx-[60px]'}/>
             </div>
             <div className={`absolute w-screen h-[20vh] md:h-[10vh] | bottom-0 | ${winner === '' ? 'bg-dark-purple' : (winner === 'x' ? 'bg-red' : 'bg-yellow')} rounded-t-[2rem]`}></div>
             {paused ? <PauseMenu togglePaused={togglePaused} restartGame={restartGame} quitGame={quitGame}/> : <></>}

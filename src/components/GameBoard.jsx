@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import BoardWhite from '../assets/images/board-layer-white-large.svg'
 import BoardBlack from '../assets/images/board-layer-black-large.svg'
 
@@ -9,6 +9,8 @@ import BoardSlot from './BoardSlot';
 import ClickDetector from './ClickDetector'
 import Pointer from './Pointer'
 import Timer from './Timer'
+
+import cpuMove from './CpuPlayer'
 
 function GameBoard({
     board,
@@ -24,7 +26,8 @@ function GameBoard({
     restartGame = () => console.log("No restartGame function set"),
     timer = 0,
     resetTimer = () => console.log("No resetTimer function set."),
-    increaseScore = () => console.log("No increaseScore function set.")
+    increaseScore = () => console.log("No increaseScore function set."),
+    vsCPU = false
 }) {
 
     const [hoveredCol, setHoveredCol] = useState(0)
@@ -69,18 +72,15 @@ function GameBoard({
             let diagonalStreak = 0;
             for (let j = 0; j < 7; j++) {
                 if(board[i][j] === player) {
-                    //More loops dependant on available diagonals
                     // Diagonal up + left
                     if (i >= 3 && j >= 3) {
                         for (let k = 0; k < 4; k++) {
                             const rowIndex = i - k;
                             const colIndex = j - k;
-                            console.log(`Checking board[${rowIndex}][${colIndex}]`);
                             if (board[rowIndex][colIndex] === player) {
                                 diagonalStreak++;
                             }
                         }
-                        console.log(`Diagonal Streak: ${diagonalStreak}`);
                         if (diagonalStreak >= 4) {
                             setWinner(player);
                             increaseScore(player);
@@ -113,7 +113,7 @@ function GameBoard({
     }
 
     const addToken = (col) => {
-        let newBoard = board;
+        let newBoard = [...board];
         let highestToken = 6;
 
         for (let i = 0; i < 6; i++) {
@@ -122,17 +122,49 @@ function GameBoard({
             }
         }
 
+        let moveSuccessful = false;
+
         if (highestToken > 0) {
+            moveSuccessful = true;
             newBoard[highestToken - 1][col] = currentPlayer;
 
             const currentPlayerCopy = currentPlayer;
+
             setCurrentPlayer(oppositePlayer);
             setOppositePlayer(currentPlayerCopy);
             resetTimer();
         }
-        setBoard(newBoard.map((row) => row));
+        setBoard(newBoard);
         checkForWin(currentPlayer);
+
+        if (moveSuccessful) {
+            if (vsCPU && currentPlayer === 'x') {
+                setTimeout(() => {
+                    cpuMoveTimeout();
+                }, 750);
+            }
+        }
     }
+
+    const timerId = useRef()
+
+    useEffect(() => {
+        if (vsCPU && currentPlayer === 'o' && !timerId.current) {
+            const id = setTimeout(() => {
+                const cpuCol = cpuMove(board, 'o');
+                addToken(cpuCol);
+                clearTimeout(timerId.current)
+                timerId.current = false;
+            }, 750);
+            timerId.current = id;
+        }
+    }, [board, currentPlayer, vsCPU])
+
+    // function cpuMoveTimeout() {
+    //     console.log('CPU move attempted')
+    //     const cpuCol = cpuMove(board, 'o');
+    //     addToken(cpuCol);
+    // }
 
     return (
         <>
@@ -150,9 +182,12 @@ function GameBoard({
                         winner === '' ?
                         <div className='absolute h-full w-full | px-2 | flex'>
                             {
+                                !(vsCPU && currentPlayer === 'o') ?
                                 board[0].map((col, i) => {
                                     return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
                                 })
+                                :
+                                <></>
                             }
                         </div>
                         :
@@ -176,9 +211,12 @@ function GameBoard({
                         winner === '' ?
                         <div className='absolute h-full w-full | px-2 | flex'>
                             {
+                                !(vsCPU && currentPlayer === 'o') ?
                                 board[0].map((col, i) => {
                                     return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
                                 })
+                                :
+                                <></>
                             }
                         </div>
                         :

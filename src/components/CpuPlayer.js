@@ -1,5 +1,5 @@
 const cpuMove = (board, player) => {
-    const opponent = (player === 'X') ? 'O' : 'X';
+    const opponent = (player === 'x') ? 'o' : 'x';
 
     // Check for a winning move
     for (let col = 0; col < 7; col++) {
@@ -60,7 +60,62 @@ const getAvailableMoves = (board) => {
 
 // Helper function to check for a win
 const checkForWin = (board, player) => {
-    // ... Your existing win-checking code here ...
+    // Check horizontally
+    for (let row = 0; row < 6; row++) {
+        for (let col = 0; col <= 3; col++) {
+            if (
+                board[row][col] === player &&
+                board[row][col + 1] === player &&
+                board[row][col + 2] === player &&
+                board[row][col + 3] === player
+            ) {
+                return true;
+            }
+        }
+    }
+
+    // Check vertically
+    for (let col = 0; col < 7; col++) {
+        for (let row = 0; row <= 2; row++) {
+            if (
+                board[row][col] === player &&
+                board[row + 1][col] === player &&
+                board[row + 2][col] === player &&
+                board[row + 3][col] === player
+            ) {
+                return true;
+            }
+        }
+    }
+
+    // Check diagonals
+    for (let row = 0; row <= 2; row++) {
+        for (let col = 0; col <= 3; col++) {
+            if (
+                board[row][col] === player &&
+                board[row + 1][col + 1] === player &&
+                board[row + 2][col + 2] === player &&
+                board[row + 3][col + 3] === player
+            ) {
+                return true;
+            }
+        }
+    }
+
+    for (let row = 0; row <= 2; row++) {
+        for (let col = 3; col < 7; col++) {
+            if (
+                board[row][col] === player &&
+                board[row + 1][col - 1] === player &&
+                board[row + 2][col - 2] === player &&
+                board[row + 3][col - 3] === player
+            ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 };
 
 // Usage example
@@ -76,5 +131,4 @@ const board = [
 const currentPlayer = 'X';
 const cpuPlayer = 'O';
 
-const cpuColumn = cpuMove(board, cpuPlayer);
-console.log(`CPU chooses column ${cpuColumn}`);
+export default cpuMove

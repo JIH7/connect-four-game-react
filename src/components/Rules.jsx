@@ -15,7 +15,7 @@ function Rules({setGameState}) {
                 <li className='text-[.75rem] md:text-[1.25rem] md:leading-[1.625rem] flex flex-start'>3<span className='ml-4'>The game ends when there is a 4-in-a-row or a stalemate.</span></li>
                 <li className='text-[.75rem] md:text-[1.25rem] md:leading-[1.625rem] flex flex-start'>4<span className='ml-4'>The starter of the previous game goes second on the next game.</span></li>
             </ol>
-            <button className='relative -bottom-2 self-center' onClick={() => {setGameState("mainMenu")}}><img src={CheckMark} alt="check-button" /></button>
+            <button className='absolute -bottom-12 self-center' onClick={() => {setGameState("mainMenu")}}><img src={CheckMark} alt="check-button" /></button>
         </div>
     </div>
   )
