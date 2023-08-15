@@ -23,7 +23,8 @@ function GameBoard({
     setWinner = () => console.log("No setWinner function set"),
     restartGame = () => console.log("No restartGame function set"),
     timer = 0,
-    resetTimer = () => console.log("No resetTimer function set.")
+    resetTimer = () => console.log("No resetTimer function set."),
+    increaseScore = () => console.log("No increaseScore function set.")
 }) {
 
     const [hoveredCol, setHoveredCol] = useState(0)
@@ -40,6 +41,7 @@ function GameBoard({
                 }
                 if (horizontalStreak >= 4) {
                     setWinner(player);
+                    increaseScore(player);
                     return;
                 }
             }
@@ -56,6 +58,7 @@ function GameBoard({
                 }
                 if (verticalStreak >= 4) {
                     setWinner(player);
+                    increaseScore(player);
                     return;
                 }
             }
@@ -80,6 +83,7 @@ function GameBoard({
                         console.log(`Diagonal Streak: ${diagonalStreak}`);
                         if (diagonalStreak >= 4) {
                             setWinner(player);
+                            increaseScore(player);
                             return;
                         }
                     }
@@ -95,6 +99,7 @@ function GameBoard({
                                 diagonalStreak++;
                                 if (diagonalStreak >= 4) {
                                     setWinner(player);
+                                    increaseScore(player);
                                     return;
                                 }
                             } else {

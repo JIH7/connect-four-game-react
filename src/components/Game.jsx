@@ -7,6 +7,7 @@ import MarkerRed from "../assets/images/marker-red.svg"
 
 import InGameButton from './InGameButton'
 import PauseMenu from './PauseMenu';
+import ScoreWidget from './ScoreWidget'
 
 function Game({setGameState}) {
     const [paused, setPaused] = useState(false);
@@ -14,7 +15,9 @@ function Game({setGameState}) {
     const [currentPlayer, setCurrentPlayer] = useState('x');
     const [oppositePlayer, setOppositePlayer] = useState('o');
     const [gameOver, setGameOver] = useState(false);
-    const [winner, setWinner] = useState('')
+    const [winner, setWinner] = useState('');
+    const [p1Score, setP1Score] = useState(0);
+    const [p2Score, setP2Score] = useState(0);
 
     //Returns a blank 7x6 board
     const blankBoard = () => {
@@ -27,6 +30,13 @@ function Game({setGameState}) {
             rows.push(row);
         }
         return rows;
+    }
+
+    const increaseScore = (player) => {
+        if(player === 'x')
+            setP1Score(p1Score + 1);
+        else
+            setP2Score(p2Score + 1);
     }
 
     const [board, setBoard] = useState(blankBoard())
@@ -63,6 +73,7 @@ function Game({setGameState}) {
             setCurrentPlayer('x');
             setOppositePlayer('o')
         }
+        resetTimer();
         setWinner('')
     }
 
@@ -72,26 +83,34 @@ function Game({setGameState}) {
 
     return (
         <div className='flex flex-col items-center'>
-            <div className='flex justify-between items-center | w-full | mt-[30px] mb-10'>
+            <div className='flex justify-around items-center | w-full | mt-[30px] mb-10'>
                 <InGameButton text={"MENU"} handleClick={togglePaused} buttonFunction={"mainMenu"}/>
                 <img className='h-[52px] w-[52px]' src={Logo} alt="logo" />
                 <InGameButton text={"RESTART"} handleClick={restartGame}/>
             </div>
-            <GameBoard
-                board={board}
-                setBoard={setBoard}
-                currentPlayer={currentPlayer}
-                setCurrentPlayer={setCurrentPlayer}
-                oppositePlayer={oppositePlayer}
-                setOppositePlayer={setOppositePlayer}
-                gameOver={gameOver}
-                setGameOver={setGameOver}
-                winner={winner}
-                setWinner={setWinner}
-                restartGame={restartGame}
-                timer={timer}
-                resetTimer={resetTimer}/>
-            
+            <div className='flex flex-col lg:flex-row lg:w-screen lg:justify-center items-center'>
+                <div className='flex justify-center w-full mb-[32px] lg:hidden'>
+                    <ScoreWidget score={p1Score} desktop={false} styles={'block lg:hidden'} side={'left'} player='player1'/>
+                    <ScoreWidget score={p2Score} desktop={false} styles={'block lg:hidden'} side={'right'} player='player2'/>
+                </div>
+                <ScoreWidget score={p1Score} player='player1' styles={'hidden lg:flex mx-[60px]'}/>
+                <GameBoard
+                    board={board}
+                    setBoard={setBoard}
+                    currentPlayer={currentPlayer}
+                    setCurrentPlayer={setCurrentPlayer}
+                    oppositePlayer={oppositePlayer}
+                    setOppositePlayer={setOppositePlayer}
+                    gameOver={gameOver}
+                    setGameOver={setGameOver}
+                    winner={winner}
+                    setWinner={setWinner}
+                    restartGame={restartGame}
+                    timer={timer}
+                    resetTimer={resetTimer}
+                    increaseScore={increaseScore}/>
+                    <ScoreWidget score={p2Score} player='player2' styles={'hidden lg:flex mx-[60px]'}/>
+            </div>
             <div className={`absolute w-screen h-[20vh] md:h-[10vh] | bottom-0 | ${winner === '' ? 'bg-dark-purple' : (winner === 'x' ? 'bg-red' : 'bg-yellow')} rounded-t-[2rem]`}></div>
             {paused ? <PauseMenu togglePaused={togglePaused} restartGame={restartGame} quitGame={quitGame}/> : <></>}
         </div>
