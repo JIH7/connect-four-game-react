@@ -121,11 +121,7 @@ function GameBoard({
                 highestToken = i;
             }
         }
-
-        let moveSuccessful = false;
-
         if (highestToken > 0) {
-            moveSuccessful = true;
             newBoard[highestToken - 1][col] = currentPlayer;
 
             const currentPlayerCopy = currentPlayer;
@@ -136,14 +132,6 @@ function GameBoard({
         }
         setBoard(newBoard);
         checkForWin(currentPlayer);
-
-        if (moveSuccessful) {
-            if (vsCPU && currentPlayer === 'x') {
-                setTimeout(() => {
-                    cpuMoveTimeout();
-                }, 750);
-            }
-        }
     }
 
     const timerId = useRef()
@@ -155,16 +143,11 @@ function GameBoard({
                 addToken(cpuCol);
                 clearTimeout(timerId.current)
                 timerId.current = false;
-            }, 750);
+            }, ((Math.random() * 850) + 350)); //Randomize delay to make it feel more like the bot is "thinking"
             timerId.current = id;
         }
     }, [board, currentPlayer, vsCPU])
 
-    // function cpuMoveTimeout() {
-    //     console.log('CPU move attempted')
-    //     const cpuCol = cpuMove(board, 'o');
-    //     addToken(cpuCol);
-    // }
 
     return (
         <>
