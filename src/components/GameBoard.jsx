@@ -149,7 +149,7 @@ function GameBoard({
     const timerId = useRef()
 
     useEffect(() => {
-        if (vsCPU && currentPlayer === 'o' && !timerId.current) {
+        if (vsCPU && currentPlayer === 'o' && !timerId.current && winner === '') {
             const id = setTimeout(() => {
                 const cpuCol = cpuMove(board, 'o');
                 addToken(cpuCol);
