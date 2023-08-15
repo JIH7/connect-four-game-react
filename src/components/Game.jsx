@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 import GameBoard from './GameBoard'
 import Logo from "../assets/images/logo.svg"
@@ -30,7 +30,23 @@ function Game({setGameState}) {
     }
 
     const [board, setBoard] = useState(blankBoard())
-    
+
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        const timerInterval = setInterval(() => {
+            if(!paused)
+                setTimer((t) => t + 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(timerInterval);
+        };
+    }, [])
+
+    const resetTimer = () => {
+        setTimer(0);
+    }
 
     const togglePaused = () => {
         setPaused(!paused);
@@ -72,7 +88,9 @@ function Game({setGameState}) {
                 setGameOver={setGameOver}
                 winner={winner}
                 setWinner={setWinner}
-                restartGame={restartGame}/>
+                restartGame={restartGame}
+                timer={timer}
+                resetTimer={resetTimer}/>
             
             <div className={`absolute w-screen h-[20vh] md:h-[10vh] | bottom-0 | ${winner === '' ? 'bg-dark-purple' : (winner === 'x' ? 'bg-red' : 'bg-yellow')} rounded-t-[2rem]`}></div>
             {paused ? <PauseMenu togglePaused={togglePaused} restartGame={restartGame} quitGame={quitGame}/> : <></>}

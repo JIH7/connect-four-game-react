@@ -21,7 +21,9 @@ function GameBoard({
     setGameOver = () => console.log("No setGameOver function set."),
     winner = '',
     setWinner = () => console.log("No setWinner function set"),
-    restartGame = () => console.log("No restartGame function set")
+    restartGame = () => console.log("No restartGame function set"),
+    timer = 0,
+    resetTimer = () => console.log("No resetTimer function set.")
 }) {
 
     const [hoveredCol, setHoveredCol] = useState(0)
@@ -121,6 +123,7 @@ function GameBoard({
             const currentPlayerCopy = currentPlayer;
             setCurrentPlayer(oppositePlayer);
             setOppositePlayer(currentPlayerCopy);
+            resetTimer();
         }
         setBoard(newBoard.map((row) => row));
         checkForWin(currentPlayer);
@@ -151,7 +154,7 @@ function GameBoard({
                         ''
                     }
                         
-                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame}/>
+                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame} timer={timer}/>
                 </div>
             </div>
             <div className='relative | block md:hidden'>
@@ -176,7 +179,7 @@ function GameBoard({
                         :
                         ''
                     }
-                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame}/>
+                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame} timer={timer}/>
                 </div>
             </div>
         </>
