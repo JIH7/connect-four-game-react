@@ -5,12 +5,10 @@ import BoardBlack from '../assets/images/board-layer-black-large.svg'
 import BoardWhiteSmall from '../assets/images/board-layer-white-small.svg'
 import BoardBlackSmall from '../assets/images/board-layer-black-small.svg'
 
-import TurnBackgroundRed from "../assets/images/turn-background-red.svg"
-import TurnBackgroundYellow from "../assets/images/turn-background-yellow.svg"
-
 import BoardSlot from './BoardSlot';
 import ClickDetector from './ClickDetector'
 import Pointer from './Pointer'
+import Timer from './Timer'
 
 function GameBoard({
     board,
@@ -20,11 +18,92 @@ function GameBoard({
     oppositePlayer = 'o',
     setOppositePlayer = () => console.log("No setOppositePlayer function set."),
     gameOver = '',
-    setGameOver = () => console.log("No setGameOver function set.")
+    setGameOver = () => console.log("No setGameOver function set."),
+    winner = '',
+    setWinner = () => console.log("No setWinner function set"),
+    restartGame = () => console.log("No restartGame function set")
 }) {
 
     const [hoveredCol, setHoveredCol] = useState(0)
-    //Initialize blank 7x6 board
+    
+    const checkForWin = (player) => {
+        //Check for horizontal win
+        for (let i = 0; i < 6; i++) {
+            let horizontalStreak = 0;
+            for (let j = 0; j < 7; j++){
+                if(board[i][j] === player) {
+                    horizontalStreak++;
+                } else {
+                    horizontalStreak = 0;
+                }
+                if (horizontalStreak >= 4) {
+                    setWinner(player);
+                    return;
+                }
+            }
+        }
+
+        //Check for vertical win
+        for (let i = 0; i < 7; i++) {
+            let verticalStreak = 0;
+            for (let j = 0; j < 6; j++) {
+                if(board[j][i] === player) {
+                    verticalStreak++;
+                } else {
+                    verticalStreak = 0;
+                }
+                if (verticalStreak >= 4) {
+                    setWinner(player);
+                    return;
+                }
+            }
+        }
+
+        //Check for diagonal win
+        for (let i = 0; i < 6; i++) {
+            let diagonalStreak = 0;
+            for (let j = 0; j < 7; j++) {
+                if(board[i][j] === player) {
+                    //More loops dependant on available diagonals
+                    // Diagonal up + left
+                    if (i >= 3 && j >= 3) {
+                        for (let k = 0; k < 4; k++) {
+                            const rowIndex = i - k;
+                            const colIndex = j - k;
+                            console.log(`Checking board[${rowIndex}][${colIndex}]`);
+                            if (board[rowIndex][colIndex] === player) {
+                                diagonalStreak++;
+                            }
+                        }
+                        console.log(`Diagonal Streak: ${diagonalStreak}`);
+                        if (diagonalStreak >= 4) {
+                            setWinner(player);
+                            return;
+                        }
+                    }
+                    diagonalStreak = 0;
+
+                    //Diagonal down + left
+                    if (i <= 2 && j >= 3) {
+                        for (let k = 0; k < 4; k++) {
+                            const rowIndex = i + k;
+                            const colIndex = j - k;
+                            console.log(`Checking board[${rowIndex}][${colIndex}]`);
+                            if (board[rowIndex][colIndex] === player) {
+                                diagonalStreak++;
+                                if (diagonalStreak >= 4) {
+                                    setWinner(player);
+                                    return;
+                                }
+                            } else {
+                                diagonalStreak = 0; // Reset streak if not a player's token
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     const addToken = (col) => {
         let newBoard = board;
@@ -43,10 +122,9 @@ function GameBoard({
             setCurrentPlayer(oppositePlayer);
             setOppositePlayer(currentPlayerCopy);
         }
-        setBoard(newBoard.map((row) => row))
-        console.log(board)
+        setBoard(newBoard.map((row) => row));
+        checkForWin(currentPlayer);
     }
-    
 
     return (
         <>
@@ -60,16 +138,20 @@ function GameBoard({
                             return <BoardSlot character={character} y={i} x={j}/>
                         })
                     })}
-                    <div className='absolute h-full w-full | px-2 | flex'>
-                        {
-                            board[0].map((col, i) => {
-                                return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
-                            })
-                        }
-                    </div>
-                    <div className='h-[197px] w-[165px] z-[10] absolute -bottom-[8rem] left-0 right-0 m-auto | '>
-                        <img className='origin-center' src={currentPlayer === 'x' ? TurnBackgroundRed : TurnBackgroundYellow} alt="timeMarker" />
-                    </div>
+                    {
+                        winner === '' ?
+                        <div className='absolute h-full w-full | px-2 | flex'>
+                            {
+                                board[0].map((col, i) => {
+                                    return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
+                                })
+                            }
+                        </div>
+                        :
+                        ''
+                    }
+                        
+                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame}/>
                 </div>
             </div>
             <div className='relative | block md:hidden'>
@@ -82,13 +164,19 @@ function GameBoard({
                             return <BoardSlot character={character} y={i} x={j}/>
                         })
                     })}
-                    <div className='absolute h-full w-full | px-2 | flex'>
-                        {
-                            board[0].map((col, i) => {
-                                return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
-                            })
-                        }
-                    </div>
+                    {
+                        winner === '' ?
+                        <div className='absolute h-full w-full | px-2 | flex'>
+                            {
+                                board[0].map((col, i) => {
+                                    return <ClickDetector colNum={i} setHoveredCol={setHoveredCol} addToken={addToken}/>
+                                })
+                            }
+                        </div>
+                        :
+                        ''
+                    }
+                    <Timer currentPlayer={currentPlayer} winner={winner} restartGame={restartGame}/>
                 </div>
             </div>
         </>

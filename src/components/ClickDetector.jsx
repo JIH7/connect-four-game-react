@@ -6,7 +6,6 @@ const ClickDetector = ({colNum, setHoveredCol, addToken = () => console.log("No 
     onMouseOver={() => setHoveredCol(colNum)}
     onClick={() => {
         addToken(colNum);
-        console.log(colNum);
     }}
     ></div>
   )

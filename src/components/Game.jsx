@@ -14,6 +14,7 @@ function Game({setGameState}) {
     const [currentPlayer, setCurrentPlayer] = useState('x');
     const [oppositePlayer, setOppositePlayer] = useState('o');
     const [gameOver, setGameOver] = useState(false);
+    const [winner, setWinner] = useState('')
 
     //Returns a blank 7x6 board
     const blankBoard = () => {
@@ -46,6 +47,7 @@ function Game({setGameState}) {
             setCurrentPlayer('x');
             setOppositePlayer('o')
         }
+        setWinner('')
     }
 
     const quitGame = () => {
@@ -67,9 +69,12 @@ function Game({setGameState}) {
                 oppositePlayer={oppositePlayer}
                 setOppositePlayer={setOppositePlayer}
                 gameOver={gameOver}
-                setGameOver={setGameOver}/>
+                setGameOver={setGameOver}
+                winner={winner}
+                setWinner={setWinner}
+                restartGame={restartGame}/>
             
-            <div className='absolute w-screen h-[20vh] md:h-[10vh] | bottom-0 | bg-dark-purple rounded-t-[2rem]'></div>
+            <div className={`absolute w-screen h-[20vh] md:h-[10vh] | bottom-0 | ${winner === '' ? 'bg-dark-purple' : (winner === 'x' ? 'bg-red' : 'bg-yellow')} rounded-t-[2rem]`}></div>
             {paused ? <PauseMenu togglePaused={togglePaused} restartGame={restartGame} quitGame={quitGame}/> : <></>}
         </div>
   )
